@@ -8,23 +8,39 @@ from eralchemy2 import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
+class User(Base):
+    __tablename__ = 'user'
+    id = Column(Integer, primary_key=True)
+    email = Column(String(250), nullable=False)
+    password = Column(String(250), nullable=False)
+    subscription_date = Column(String(250), nullable=False)
+    first_name = Column(String(250), nullable=False)
+    last_name = Column(String(250), nullable=False)
+    planets = relationship("Planet", back_populates="user")
+    characters = relationship("Character", back_populates="user")
+
+class Planet(Base):
+    __tablename__ = 'planet'
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
+    description = Column(String(250), nullable=False)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship("User", back_populates="planets")
 
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
+class Character(Base):
+    __tablename__ = 'character'
     id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+    name = Column(String(250), nullable=False)
+    description = Column(String(250), nullable=False)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship("User", back_populates="characters")
+
+class Film(Base):
+    __tablename__ = 'film'
+    id = Column(Integer, primary_key=True)
+    title = Column(String(250), nullable=False)
+    episode_id = Column(Integer, nullable=False)
+    opening_crawl = Column(String(1000), nullable=False)
 
     def to_dict(self):
         return {}
