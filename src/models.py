@@ -16,8 +16,6 @@ class User(Base):
     subscription_date = Column(String(250), nullable=False)
     first_name = Column(String(250), nullable=False)
     last_name = Column(String(250), nullable=False)
-    planets = relationship("Planet", back_populates="user")
-    characters = relationship("Character", back_populates="user")
 
 class Planet(Base):
     __tablename__ = 'planet'
@@ -25,7 +23,7 @@ class Planet(Base):
     name = Column(String(250), nullable=False)
     description = Column(String(250), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'))
-    user = relationship("User", back_populates="planets")
+    users = relationship('user')
 
 class Character(Base):
     __tablename__ = 'character'
@@ -33,7 +31,7 @@ class Character(Base):
     name = Column(String(250), nullable=False)
     description = Column(String(250), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'))
-    user = relationship("User", back_populates="characters")
+    user = relationship('user')
 
 class Film(Base):
     __tablename__ = 'film'
@@ -41,6 +39,10 @@ class Film(Base):
     title = Column(String(250), nullable=False)
     episode_id = Column(Integer, nullable=False)
     opening_crawl = Column(String(1000), nullable=False)
+
+# La tabla de usuarios tiene una relación uno a muchos con las tablas de planetas y personajes. 
+# La tabla de planetas y la tabla de personajes tienen una relación muchos a uno con la tabla de usuarios. 
+# La tabla de películas no tiene relaciones con otras tablas.
 
     def to_dict(self):
         return {}
